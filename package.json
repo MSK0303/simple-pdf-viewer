@@ -1,0 +1,19 @@
+{
+  "name": "simple-pdf-viewer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "electron": "^13.0.1",
+    "electron-pdf-viewer": "^1.0.1",
+    "typescript": "^4.3.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "build": "tsc",
+    "start": "npm run build && electron ./index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "MSK",
+  "license": "ISC"
+}
