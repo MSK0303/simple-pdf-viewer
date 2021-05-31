@@ -26,7 +26,7 @@ const createWindow =  () =>  {
     });
     win.loadFile('src/index.html');
     state.manage(win);
-    //win.webContents.openDevTools();
+    win.webContents.openDevTools();
     return win.id;
 }
 
