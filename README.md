@@ -8,7 +8,6 @@
 * Node.js 14.16.1
 * Electron 13.0.1
 * Typescript 4.3.2
-* electron-pdf-viewer 1.0.1
 
 # Installation
 

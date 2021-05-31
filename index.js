@@ -1,4 +1,4 @@
-const {app,BrowserWindow,Menu} = require('electron');
+const {app,BrowserWindow,Menu, dialog} = require('electron');
 const path = require('path');
 const {ipcMain} = require('electron');
 
@@ -7,16 +7,36 @@ const {ipcMain} = require('electron');
 const createWindow =  () =>  {
     let win = new BrowserWindow({
         width: 800, //windowの幅
-        height: 600, //windowの高さ
+        height: 900, //windowの高さ
 		backgroundColor: 'white', //背景色を設定
         webPreferences: {
             contextIsolation: true,
-            preload: path.join(__dirname, 'preload.js')
+            preload: path.join(__dirname+"/src/", 'preload.js')
         },
     });
-    win.loadFile('index.html');
+    win.loadFile('src/index.html');
     win.webContents.openDevTools();
     return win.id;
+}
+
+const openPdfFile = () => {
+    //ipcでレンダラープロセスにメッセージをpathを送ってそのpathでPDFを開く
+    const w = BrowserWindow.getFocusedWindow();
+    dialog.showOpenDialog(w,{
+        properties:["openFile"],
+        filters: [
+            {name:"PDF Files",extensions:["pdf"]},
+        ],
+    }).then((result) => {
+        if(!result.canceled)
+        {
+            console.log("openPdfFile: "+result.filePaths[0]);
+            const file_path = result.filePaths[0];
+            w.webContents.send("open-pdf",file_path);
+        }
+    }).catch(err => {
+        dialog.showErrorBox(err.code+err.errno,err.message);
+    });
 }
 
 const createMenu = () => {
@@ -24,19 +44,35 @@ const createMenu = () => {
         {
             label: "ファイル",
             submenu: [
-                {label:"New",click: () => {
+                {
+                    label:"New",
+                    click: () => {
                     console.log("New Menu.");
                     createWindow();
-                }},
-                {label:"File",click: () => {
+                    }
+                },
+                {
+                    label:"Open",
+                    click: () => {
+                        console.log("Open");
+                        openPdfFile();
+                    }
+                },
+                {
+                    label:"File",
+                    click: () => {
                     console.log("File Menu.");
                     createWindow();
-                }},
+                    }
+                },
                 {type: "separator"},
-                {label:"Quit",click: () => {
+                {
+                    label:"Quit",
+                    click: () => {
                     console.log("Quit Menu.");
                     app.quit();
-                }},
+                    }
+                },
             ]
         },
     ];
