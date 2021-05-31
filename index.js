@@ -1,21 +1,32 @@
 const {app,BrowserWindow,Menu, dialog} = require('electron');
 const path = require('path');
 const {ipcMain} = require('electron');
-
+const WindowStateKeeper = require('electron-window-state');
 
 
 const createWindow =  () =>  {
+    const state = WindowStateKeeper({
+        defaultWidth: 800, //windowの幅
+        defaultHeight: 900, //windowの高さ
+        webPreferences: {
+            contextIsolation: true,
+            preload: path.join(__dirname+"/src/", 'preload.js')
+        },
+    })
+
     let win = new BrowserWindow({
-        width: 800, //windowの幅
-        height: 900, //windowの高さ
-		backgroundColor: 'white', //背景色を設定
+        x: state.x,
+        y: state.y,
+        width: state.width,
+        height: state.height,
         webPreferences: {
             contextIsolation: true,
             preload: path.join(__dirname+"/src/", 'preload.js')
         },
     });
     win.loadFile('src/index.html');
-    win.webContents.openDevTools();
+    state.manage(win);
+    //win.webContents.openDevTools();
     return win.id;
 }
 
