@@ -117,3 +117,9 @@ ipcMain.handle('get-window-id',(event) => {
     win = BrowserWindow.getFocusedWindow();
     return win.id;
 })
+
+ipcMain.handle('drop-except-for-pdf',(event) => {
+    console.log("ipcMain.drop-except-for-pdf");
+    dialog.showErrorBox("Caution!","PDFファイル以外がドロップされました");
+    return "OK";
+})

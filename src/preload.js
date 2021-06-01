@@ -45,8 +45,19 @@ const checkDrop = () => {
         //     console.log("File(s) dragged here: "+f.path);
         // }
         const file_path = e.dataTransfer.files[0].path;
-        console.log("File(s) dragged here: "+file_path);
-        openPdfView(file_path);
+        if( file_path.match(/.pdf/) )
+        {
+            console.log("File(s) dragged here: "+file_path);
+            openPdfView(file_path);
+        }
+        else
+        {
+            console.log("not pdf");
+            //ipcメッセージでエラーがあったことをメインプロセスに知らせる
+            ipcRenderer.invoke('drop-except-for-pdf').then(result=>{
+                console.log("back show message");
+            });
+        }
 
     });
     region.addEventListener("dragover",(e) => {
