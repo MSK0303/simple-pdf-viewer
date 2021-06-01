@@ -33,11 +33,46 @@ const showPdfView = () => {
     view_content.appendChild(ifram);
 }
 
+const checkDrop = () => {
+    const region = document.getElementById("viewer");
+    region.addEventListener('drop',(e) => {
+        console.log("drop");
+        e.preventDefault();
+        e.stopPropagation();
+
+        // for(const f of e.dataTransfer.files)
+        // {
+        //     console.log("File(s) dragged here: "+f.path);
+        // }
+        const file_path = e.dataTransfer.files[0].path;
+        if( file_path.match(/.pdf/) )
+        {
+            console.log("File(s) dragged here: "+file_path);
+            openPdfView(file_path);
+        }
+        else
+        {
+            console.log("not pdf");
+            //ipcメッセージでエラーがあったことをメインプロセスに知らせる
+            ipcRenderer.invoke('drop-except-for-pdf').then(result=>{
+                console.log("back show message");
+            });
+        }
+
+    });
+    region.addEventListener("dragover",(e) => {
+        console.log("dragover");
+        e.preventDefault();
+        e.stopPropagation();
+    })
+}
+
 
 contextBridge.exposeInMainWorld('api', {
     create_new_window: createNewWindow,
     get_window_id:getWindowId,
     show_pdf_view:showPdfView,
+    check_drop:checkDrop,
   }
 )
 /**************************************************************************************************

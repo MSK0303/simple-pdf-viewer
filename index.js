@@ -26,7 +26,7 @@ const createWindow =  () =>  {
     });
     win.loadFile('src/index.html');
     state.manage(win);
-    //win.webContents.openDevTools();
+    win.webContents.openDevTools();
     return win.id;
 }
 
@@ -116,4 +116,10 @@ ipcMain.handle('get-window-id',(event) => {
     console.log("ipcMain.get-window-id");
     win = BrowserWindow.getFocusedWindow();
     return win.id;
+})
+
+ipcMain.handle('drop-except-for-pdf',(event) => {
+    console.log("ipcMain.drop-except-for-pdf");
+    dialog.showErrorBox("Caution!","PDFファイル以外がドロップされました");
+    return "OK";
 })
