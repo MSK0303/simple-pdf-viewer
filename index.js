@@ -86,6 +86,22 @@ const createMenu = () => {
                 },
             ]
         },
+        {
+            label: "ヘルプ",
+            submenu: [
+                {
+                    label: "バージョン情報",
+                    click: () => {
+                        dialog.showMessageBoxSync({
+                            type: 'info',
+                            title: "バージョン情報",
+                            message:"バージョン情報",
+                            detail:"version : v00.00.01",
+                        });
+                    }
+                },
+            ]
+        }
     ];
     let menu = new Menu.buildFromTemplate(menu_temp);
 
